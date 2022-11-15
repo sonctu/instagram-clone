@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 const User = new mongoose.Schema(
   {
-    fullName: {
+    fullname: {
       type: String,
       required: true,
       trim: true,
+      maxLength: 100,
     },
     username: {
       type: String,
       required: true,
       trim: true,
-      e,
     },
     email: {
       type: String,
@@ -55,6 +55,10 @@ const User = new mongoose.Schema(
       default: "",
     },
     story: {
+      type: String,
+      default: "",
+    },
+    website: {
       type: String,
       default: "",
     },
