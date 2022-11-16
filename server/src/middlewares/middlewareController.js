@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 const middlewareController = {
   verifyToken: (req, res, next) => {
-    const token = req.headers["Authorization"];
+    const token = req.header("Authorization") || req.body.Authorization;
     if (token) {
       const accessToken = token.split(" ")[1];
       jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY, (err, data) => {

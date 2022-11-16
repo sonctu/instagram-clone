@@ -12,3 +12,15 @@ export const registerUser = ({ email, password, fullname, username }: FormState)
 export const refreshToken = () => {
   return instance.post<IUserResponse>('/v1/auth/refreshToken');
 };
+
+export const logoutUser = (accessToken: string) => {
+  return instance.post(
+    '/v1/auth/logout',
+    { Authorization: `Bearer ${accessToken}` },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+};

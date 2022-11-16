@@ -1,4 +1,4 @@
-export const getIsLogin = () => {
-  const isLogin: boolean = JSON.parse(localStorage.getItem('login') as string);
+export const getIsLogin: () => boolean = () => {
+  const isLogin = JSON.parse(localStorage.getItem('login') as string) || false;
   return isLogin;
 };

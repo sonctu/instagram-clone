@@ -12,6 +12,9 @@ import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '~/services/auth';
 import { getIsLogin } from '~/utils/constants';
 import { useUserStore } from '~/store/store';
+import { useCookies } from 'react-cookie';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 const initialFormState: FormState = {
   email: '',
@@ -19,12 +22,22 @@ const initialFormState: FormState = {
   fullname: '',
   username: '',
 };
+
+const schema = yup.object({
+  email: yup.string().required('Email is required').email(),
+  password: yup.string().required('Password is required'),
+  fullname: yup.string().required('Fullname is required'),
+  username: yup.string().required('Username is required'),
+});
 const Register: FC = () => {
   const { setCurrentUser } = useUserStore((state) => state);
 
-  const { control, handleSubmit } = useForm<FormState>({
+  const [_, setCookie] = useCookies(['accessToken']);
+
+  const { control, handleSubmit, reset } = useForm<FormState>({
     defaultValues: initialFormState,
     mode: 'onChange',
+    resolver: yupResolver(schema),
   });
 
   const registerUserMutation = useMutation({
@@ -38,6 +51,8 @@ const Register: FC = () => {
       onSuccess: (data) => {
         localStorage.setItem('login', JSON.stringify(true));
         setCurrentUser(data.data.data);
+        setCookie('accessToken', data.data.accessToken);
+        reset(initialFormState);
       },
       onError: (error) => {
         console.log(error);
