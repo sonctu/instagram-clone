@@ -9,6 +9,8 @@ module.exports = {
         blueSecondary: '#5259d6',
         grayPrimary: '#dbdbdb',
         graySecondary: '#262626',
+        grayText: '#8e8e8e',
+        bgColorPrimary: '#fafafa',
       },
     },
   },
