@@ -48,7 +48,7 @@ const Login: FC = () => {
 
     loginUserMutation.mutate(values, {
       onSuccess: (data) => {
-        localStorage.setItem('login', JSON.stringify(true));
+        localStorage.setItem('logged_in', JSON.stringify(true));
         setCurrentUser(data.data.data);
         setCookie('accessToken', data.data.accessToken);
         reset(initialFormState);
@@ -68,9 +68,11 @@ const Login: FC = () => {
             placeholder='Phone number, username or email address'
           ></Input>
           <InputPassword control={control}></InputPassword>
-          <button className='mb-4 text-xs font-medium text-right cursor-pointer select-none'>
-            Forgotten password?
-          </button>
+          <Link to='/forgotten-password' className='mb-4 text-right'>
+            <button className='text-xs font-medium cursor-pointer select-none'>
+              Forgotten password?
+            </button>
+          </Link>
         </div>
         <Button type='submit' text='Log in' isLoading={loginUserMutation.isLoading}></Button>
         <Divider></Divider>

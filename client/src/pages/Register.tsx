@@ -49,7 +49,7 @@ const Register: FC = () => {
     if (isLogin) return;
     registerUserMutation.mutate(values, {
       onSuccess: (data) => {
-        localStorage.setItem('login', JSON.stringify(true));
+        localStorage.setItem('logged_in', JSON.stringify(true));
         setCurrentUser(data.data.data);
         setCookie('accessToken', data.data.accessToken);
         reset(initialFormState);

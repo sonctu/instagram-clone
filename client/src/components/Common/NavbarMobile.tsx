@@ -25,7 +25,7 @@ const navbarList = [
 
 const NavbarMobile: FC = () => {
   return (
-    <nav className='fixed bottom-0 left-0 w-full bg-white border-t border-grayPrimary'>
+    <nav className='fixed bottom-0 left-0 z-50 w-full bg-white border-t border-grayPrimary'>
       <ul className='flex items-center'>
         {navbarList.map((item, index) => (
           <li className='flex items-center justify-center flex-1 px-4 py-3' key={index}>

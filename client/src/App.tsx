@@ -9,6 +9,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import Register from './pages/Register';
+import ForgottenPassword from './pages/ForgottenPassword';
+import Explore from './pages/Explore';
 
 function App() {
   const { setCurrentUser } = useUserStore((state) => state);
@@ -32,6 +34,8 @@ function App() {
         ></Route>
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/login' element={<Login></Login>}></Route>
+        <Route path='/forgotten-password' element={<ForgottenPassword></ForgottenPassword>}></Route>
+        <Route path='/explore' element={<Explore></Explore>}></Route>
         <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
       </Routes>
     </div>

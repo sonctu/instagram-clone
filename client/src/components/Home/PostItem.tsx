@@ -26,7 +26,7 @@ const PostItem: FC = () => {
       <div className='w-full h-[125%]'>
         <img
           src='https://vaithuhayho.com/wp-content/uploads/2022/09/anh-gai-xinh-deo-kinh-35.jpg'
-          alt=''
+          alt='post-img'
           className='object-cover w-full h-full'
         />
       </div>

@@ -32,3 +32,9 @@ export interface IUserResponse {
   data: IUser;
   accessToken: string;
 }
+
+export type ISearchUser = Pick<IUser, '_id' | 'avatar' | 'fullname' | 'username'>;
+export interface ISearchUserResponse {
+  msg: string;
+  data: ISearchUser[];
+}
