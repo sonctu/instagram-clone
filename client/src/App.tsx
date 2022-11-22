@@ -11,6 +11,7 @@ import PageNotFound from './pages/PageNotFound';
 import Register from './pages/Register';
 import ForgottenPassword from './pages/ForgottenPassword';
 import Explore from './pages/Explore';
+import Profile from './pages/Profile';
 
 function App() {
   const { setCurrentUser } = useUserStore((state) => state);
@@ -36,6 +37,10 @@ function App() {
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/forgotten-password' element={<ForgottenPassword></ForgottenPassword>}></Route>
         <Route path='/explore' element={<Explore></Explore>}></Route>
+        <Route path='/profile/:username' element={<Profile></Profile>}></Route>
+        <Route path='/profile/:username/feed' element={<Profile></Profile>}></Route>
+        <Route path='/profile/:username/reels' element={<Profile></Profile>}></Route>
+        <Route path='/profile/:username/tagged' element={<Profile></Profile>}></Route>
         <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
       </Routes>
     </div>

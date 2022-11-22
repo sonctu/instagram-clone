@@ -1,12 +1,13 @@
 import { FC } from 'react';
+import { IColorIcon } from '~/types/global';
 
-const SaveIcon: FC = () => {
+const SaveIcon: FC<IColorIcon> = ({ color = '#262626' }) => {
   return (
     <svg
       aria-label='Lưu'
       className='_ab6-'
-      color='#262626'
-      fill='#262626'
+      color={color}
+      fill={color}
       height='24'
       role='img'
       viewBox='0 0 24 24'

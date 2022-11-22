@@ -40,6 +40,7 @@ const authController = {
           path: "/",
           sameSite: "strict",
           secure: false,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({
@@ -81,6 +82,7 @@ const authController = {
         path: "/",
         sameSite: "strict",
         secure: false,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 
       const user = await newUser.save();
@@ -117,6 +119,7 @@ const authController = {
           path: "/",
           sameSite: "strict",
           secure: false,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         });
         return res.status(200).json({
           msg: "Refresh token success",

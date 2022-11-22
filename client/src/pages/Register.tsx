@@ -10,7 +10,7 @@ import InputPassword from '~/components/Form/InputPassword';
 import { FC } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '~/services/auth';
-import { getIsLogin } from '~/utils/constants';
+import { getIsLogin, LOGINKEY } from '~/utils/constants';
 import { useUserStore } from '~/store/store';
 import { useCookies } from 'react-cookie';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -49,7 +49,7 @@ const Register: FC = () => {
     if (isLogin) return;
     registerUserMutation.mutate(values, {
       onSuccess: (data) => {
-        localStorage.setItem('logged_in', JSON.stringify(true));
+        localStorage.setItem(LOGINKEY, JSON.stringify(true));
         setCurrentUser(data.data.data);
         setCookie('accessToken', data.data.accessToken);
         reset(initialFormState);

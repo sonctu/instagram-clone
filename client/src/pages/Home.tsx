@@ -5,8 +5,9 @@ import { useUserStore } from '~/store/store';
 import { logoutUser } from '~/services/auth';
 import Menu from '~/components/Home/Menu';
 import PostList from '~/components/Home/PostList';
-import NavbarMobile from '~/components/Common/NavbarMobile';
 import Button from '~/components/Form/Button';
+import { LOGINKEY } from '~/utils/constants';
+import MainLayout from '~/layouts/MainLayout';
 
 const Home: FC = () => {
   const [cookies, _, removeCookie] = useCookies(['accessToken']);
@@ -15,22 +16,23 @@ const Home: FC = () => {
     if (cookies.accessToken) {
       await logoutUser(cookies.accessToken);
     }
-    localStorage.removeItem('login');
+    localStorage.removeItem(LOGINKEY);
     removeCookie('accessToken');
     setCurrentUser(null);
   };
   return (
-    <div>
+    <MainLayout>
       <div className='mt-[46px]'>
         <Header></Header>
       </div>
       <div className='min-h-screen mb-[50px]'>
-        <Menu></Menu>
+        <div className='px-4 py-2 border-b bg-bgColorPrimary border-grayPrimary'>
+          <Menu></Menu>
+        </div>
         <PostList></PostList>
-        <NavbarMobile></NavbarMobile>
         <Button text='Log out' type='button' onClick={handleLogout}></Button>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

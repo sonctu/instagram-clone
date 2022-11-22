@@ -43,10 +43,10 @@ const PostItem: FC = () => {
         </div>
         <div className='mb-2 text-sm font-semibold text-graySecondary'>24,955 lượt thích</div>
         <div className='flex gap-2 text-sm text-graySecondary'>
-          <p>
+          <div>
             <h3 className='inline-block mr-2 font-semibold'>khanhvyccf</h3>Cà phê, đọc sách, chuyện
             trò cùng nhau đii ✏️
-          </p>
+          </div>
         </div>
         <div className='my-1 text-sm text-grayText'>Xem tất cả 55 bình luận</div>
         <div>

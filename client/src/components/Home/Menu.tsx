@@ -4,7 +4,7 @@ import MenuNews from './MenuNews';
 
 const Menu: FC = () => {
   return (
-    <section className='flex gap-4 px-4 py-2 overflow-y-auto border-b bg-bgColorPrimary border-grayPrimary scrollbar-hide'>
+    <section className='flex gap-4 overflow-y-auto scrollbar-hide'>
       <MenuNews></MenuNews>
       {Array(10)
         .fill(0)

@@ -14,7 +14,7 @@ import Divider from '~/components/Form/Divider';
 import FormLayout from '~/layouts/FormLayout';
 import Input from '~/components/Form/Input';
 import InputPassword from '~/components/Form/InputPassword';
-import { getIsLogin } from '~/utils/constants';
+import { getIsLogin, LOGINKEY } from '~/utils/constants';
 import { useCookies } from 'react-cookie';
 
 const initialFormState: FormStateLogin = {
@@ -45,10 +45,9 @@ const Login: FC = () => {
   const handleLogin = (values: FormStateLogin) => {
     const isLogin = getIsLogin();
     if (isLogin) return;
-
     loginUserMutation.mutate(values, {
       onSuccess: (data) => {
-        localStorage.setItem('logged_in', JSON.stringify(true));
+        localStorage.setItem(LOGINKEY, JSON.stringify(true));
         setCurrentUser(data.data.data);
         setCookie('accessToken', data.data.accessToken);
         reset(initialFormState);
