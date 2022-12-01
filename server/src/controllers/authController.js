@@ -8,7 +8,7 @@ const authController = {
       { id: user._id },
       process.env.ACCESS_TOKEN_KEY,
       {
-        expiresIn: "1d",
+        expiresIn: "30s",
       }
     );
     const refreshToken = jwt.sign(
@@ -99,11 +99,10 @@ const authController = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  requestRefreshToken: (req, res) => {
+  reloadGetUser: (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken)
       return res.status(401).json({ msg: "Not authenticated" });
-
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_KEY,
@@ -122,12 +121,41 @@ const authController = {
           maxAge: 30 * 24 * 60 * 60 * 1000,
         });
         return res.status(200).json({
-          msg: "Refresh token success",
+          msg: "Reload success",
           accessToken: newAccessToken,
           data: {
             ...user._doc,
             password: "",
           },
+        });
+      }
+    );
+  },
+  refreshToken: (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken)
+      return res.status(401).json({ msg: "Not authenticated" });
+
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_KEY,
+      async (err, data) => {
+        if (err) return res.status(401).json({ msg: err });
+
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+          authController.generateToken(data);
+
+        res.cookie("refreshToken", newRefreshToken, {
+          httpOnly: true,
+          path: "/",
+          sameSite: "strict",
+          secure: false,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+
+        return res.status(200).json({
+          msg: "Refresh token success",
+          accessToken: newAccessToken,
         });
       }
     );

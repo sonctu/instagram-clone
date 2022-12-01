@@ -1,13 +1,16 @@
-import { ISearchUserResponse } from '~/types/auth';
-import { instance } from '~/utils/instance';
+import { ISearchUserResponse, IUserRes } from '~/types/auth';
+import { instanceJWT } from '~/utils/instance';
 
-export const getSearchUser = (username: string, accessToken: string) => {
-  return instance.get<ISearchUserResponse>('/v1/user/search', {
+export const getSearchUser = async (username: string) => {
+  const response = await instanceJWT.get<ISearchUserResponse>('/v1/user/search', {
     params: {
       username,
     },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
+  return response.data;
+};
+
+export const getUser = async (id: string) => {
+  const response = await instanceJWT.get<IUserRes>(`/v1/user/${id}`);
+  return response.data;
 };

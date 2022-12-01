@@ -5,22 +5,24 @@ import { getSearchUser } from '~/services/user';
 import SearchIcon from '../Icons/SearchIcon';
 import XCircleIcon from '../Icons/XCircleIcon';
 import LoadIcon from '../../assets/loading.gif';
+import { useNavigate } from 'react-router-dom';
 
 const Search: FC = () => {
   const [searchUser, setSearchUser] = useState('');
 
   const [cookies, _] = useCookies(['accessToken']);
 
+  const navigate = useNavigate();
+
   const { data, isLoading } = useQuery({
     queryKey: ['searchUser', searchUser],
-    queryFn: () => getSearchUser(searchUser, cookies.accessToken),
+    queryFn: () => getSearchUser(searchUser),
     enabled: !!cookies.accessToken && !!searchUser,
   });
 
   const handleCloseSearch = () => {
     setSearchUser('');
   };
-  console.log(data?.data.data);
   return (
     <section
       className={`fixed top-0 left-0 z-50 w-full px-4 py-2 border-b border-grayPrimary ${
@@ -58,11 +60,13 @@ const Search: FC = () => {
           )}
         </div>
       </div>
-      {searchUser && data?.data.data.length !== undefined && data.data.data.length > 0 && (
+      {searchUser && data?.data.length !== undefined && data.data.length > 0 && (
         <div className='absolute left-0 z-10 w-full border-t border-grayPrimary max-h-[320px] overflow-y-auto bg-white top-full'>
           <ul className='py-2'>
-            {data?.data.data.map((item) => (
+            {data?.data.map((item) => (
               <li
+                aria-hidden
+                onClick={() => navigate(`/profile/${item._id}/`)}
                 key={item._id}
                 className='flex items-center gap-3 px-4 py-2 transition-all cursor-pointer hover:bg-bgColorPrimary'
               >

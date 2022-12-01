@@ -48,8 +48,8 @@ const Login: FC = () => {
     loginUserMutation.mutate(values, {
       onSuccess: (data) => {
         localStorage.setItem(LOGINKEY, JSON.stringify(true));
-        setCurrentUser(data.data.data);
-        setCookie('accessToken', data.data.accessToken);
+        setCurrentUser(data.data);
+        setCookie('accessToken', data.accessToken);
         reset(initialFormState);
       },
       onError: (error) => {

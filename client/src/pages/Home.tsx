@@ -14,7 +14,7 @@ const Home: FC = () => {
   const { setCurrentUser } = useUserStore((state) => state);
   const handleLogout = async () => {
     if (cookies.accessToken) {
-      await logoutUser(cookies.accessToken);
+      await logoutUser();
     }
     localStorage.removeItem(LOGINKEY);
     removeCookie('accessToken');

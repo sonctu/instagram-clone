@@ -1,26 +1,32 @@
-import { FormStateLogin, FormState, IUserResponse } from '~/types/auth';
-import { instance } from '~/utils/instance';
+import { FormStateLogin, FormState, IUserResponse, IUserRefresh } from '~/types/auth';
+import { instance, instanceJWT } from '~/utils/instance';
 
-export const loginUser = ({ email, password }: FormStateLogin) => {
-  return instance.post<IUserResponse>('/v1/auth/login', { email, password });
+export const loginUser = async ({ email, password }: FormStateLogin) => {
+  const response = await instance.post<IUserResponse>('/v1/auth/login', { email, password });
+  return response.data;
 };
 
-export const registerUser = ({ email, password, fullname, username }: FormState) => {
-  return instance.post<IUserResponse>('/v1/auth/register', { email, password, fullname, username });
+export const registerUser = async ({ email, password, fullname, username }: FormState) => {
+  const response = await instance.post<IUserResponse>('/v1/auth/register', {
+    email,
+    password,
+    fullname,
+    username,
+  });
+  return response.data;
 };
 
-export const refreshToken = () => {
-  return instance.post<IUserResponse>('/v1/auth/refreshToken');
+export const reload = async () => {
+  const response = await instance.post<IUserResponse>('/v1/auth/reload');
+  return response.data;
 };
 
-export const logoutUser = (accessToken: string) => {
-  return instance.post(
-    '/v1/auth/logout',
-    { Authorization: `Bearer ${accessToken}` },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );
+export const refreshToken = async () => {
+  const response = await instance.post<IUserRefresh>('/v1/auth/refreshToken');
+  return response.data;
+};
+
+export const logoutUser = async () => {
+  const response = await instanceJWT.post('/v1/auth/logout', {});
+  return response.data;
 };

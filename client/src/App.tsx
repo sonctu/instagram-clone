@@ -1,6 +1,6 @@
 import './App.css';
 import { getIsLogin } from './utils/constants';
-import { refreshToken } from './services/auth';
+import { reload } from './services/auth';
 import { Route, Routes } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
@@ -20,9 +20,9 @@ function App() {
     const isLogin = getIsLogin();
     if (isLogin) {
       (async function refreshUser() {
-        const res = await refreshToken();
-        setCurrentUser(res.data.data);
-        setCookie('accessToken', res.data.accessToken);
+        const res = await reload();
+        setCurrentUser(res.data);
+        setCookie('accessToken', res.accessToken);
       })();
     }
   }, [setCookie, setCurrentUser]);
@@ -37,10 +37,8 @@ function App() {
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/forgotten-password' element={<ForgottenPassword></ForgottenPassword>}></Route>
         <Route path='/explore' element={<Explore></Explore>}></Route>
-        <Route path='/profile/:username' element={<Profile></Profile>}></Route>
-        <Route path='/profile/:username/feed' element={<Profile></Profile>}></Route>
-        <Route path='/profile/:username/reels' element={<Profile></Profile>}></Route>
-        <Route path='/profile/:username/tagged' element={<Profile></Profile>}></Route>
+        <Route path='/profile/:id/' element={<Profile></Profile>}></Route>
+        <Route path='/profile/:id/:model' element={<Profile></Profile>}></Route>
         <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
       </Routes>
     </div>

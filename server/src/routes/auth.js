@@ -11,7 +11,10 @@ router.post("/login", authController.loginUser);
 router.post("/register", authController.registerUser);
 
 //Refresh token
-router.post("/refreshToken", authController.requestRefreshToken);
+router.post("/refreshToken", authController.refreshToken);
+
+// Reload get user
+router.post("/reload", authController.reloadGetUser);
 
 //Logout
 router.post(

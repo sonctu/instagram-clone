@@ -33,7 +33,12 @@ export interface IUserResponse {
   accessToken: string;
 }
 
+export type IUserRefresh = Omit<IUserResponse, 'data'>;
+
+export type IUserRes = Omit<IUserResponse, 'accessToken'>;
+
 export type ISearchUser = Pick<IUser, '_id' | 'avatar' | 'fullname' | 'username'>;
+
 export interface ISearchUserResponse {
   msg: string;
   data: ISearchUser[];
