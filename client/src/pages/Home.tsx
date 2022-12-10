@@ -5,9 +5,9 @@ import { useUserStore } from '~/store/store';
 import { logoutUser } from '~/services/auth';
 import Menu from '~/components/Home/Menu';
 import PostList from '~/components/Home/PostList';
-import Button from '~/components/Form/Button';
 import { LOGINKEY } from '~/utils/constants';
 import MainLayout from '~/layouts/MainLayout';
+import ButtonForm from '~/components/Form/ButtonForm';
 
 const Home: FC = () => {
   const [cookies, _, removeCookie] = useCookies(['accessToken']);
@@ -30,7 +30,7 @@ const Home: FC = () => {
           <Menu></Menu>
         </div>
         <PostList></PostList>
-        <Button text='Log out' type='button' onClick={handleLogout}></Button>
+        <ButtonForm text='Log out' type='button' onClick={handleLogout}></ButtonForm>
       </div>
     </MainLayout>
   );

@@ -14,4 +14,7 @@ router.get(
 // Get user
 router.get("/:id", middlewareController.verifyToken, userController.getUser);
 
+//Update current user
+router.put("/", middlewareController.verifyToken, userController.updateUser);
+
 export default router;

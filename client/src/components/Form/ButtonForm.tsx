@@ -8,7 +8,7 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button: FC<ButtonProps> = ({ type = 'button', text, isLoading, ...props }) => {
+const ButtonForm: FC<ButtonProps> = ({ type = 'button', text, isLoading, ...props }) => {
   return (
     <button
       type={type}
@@ -20,4 +20,4 @@ const Button: FC<ButtonProps> = ({ type = 'button', text, isLoading, ...props })
   );
 };
 
-export default Button;
+export default ButtonForm;

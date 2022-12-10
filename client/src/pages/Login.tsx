@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useUserStore } from '~/store/store';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Button from '~/components/Form/Button';
+import ButtonForm from '~/components/Form/ButtonForm';
 import ButtonFacebook from '~/components/Form/ButtonFacebook';
 import ButtonGoogle from '~/components/Form/ButtonGoogle';
 import Divider from '~/components/Form/Divider';
@@ -73,7 +73,11 @@ const Login: FC = () => {
             </button>
           </Link>
         </div>
-        <Button type='submit' text='Log in' isLoading={loginUserMutation.isLoading}></Button>
+        <ButtonForm
+          type='submit'
+          text='Log in'
+          isLoading={loginUserMutation.isLoading}
+        ></ButtonForm>
         <Divider></Divider>
         <div className='w-full mt-1'>
           <ButtonGoogle></ButtonGoogle>

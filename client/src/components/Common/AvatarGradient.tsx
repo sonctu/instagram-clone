@@ -1,26 +1,28 @@
 import { FC } from 'react';
+import { handleSetSize } from '~/utils/constants';
 
 interface AvatarGradientProps {
   size?: 'big' | 'medium' | 'small';
+  url?: string;
 }
-const AvatarGradient: FC<AvatarGradientProps> = ({ size = 'medium' }) => {
-  const classSize =
-    size === 'big'
-      ? 'w-[66px] h-[66px]'
-      : size === 'medium'
-      ? 'w-[42px] h-[42px]'
-      : 'w-[34px] h-[34px]';
+const AvatarGradient: FC<AvatarGradientProps> = ({ size = 'medium', url }) => {
+  const classSize = handleSetSize(size);
   return (
-    <div className={`relative ${classSize}`}>
-      <div className='absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full w-[calc(100%-10px)] h-[calc(100%-10px)] top-1/2 left-1/2'>
-        <img
-          src='https://vaithuhayho.com/wp-content/uploads/2022/09/anh-gai-xinh-deo-kinh-35.jpg'
-          alt='avatar'
-          className='object-cover w-full h-full rounded-full'
-        />
+    <div className='flex flex-col'>
+      <div className='flex items-center justify-center'>
+        <div className='p-[2px] rounded-full flex items-center justify-center avatar'>
+          <div className='bg-white p-[3px] w-full h-full flex items-center justify-center rounded-full'>
+            <img
+              src={
+                url ||
+                'https://pdp.edu.vn/wp-content/uploads/2021/06/hinh-anh-gai-xinh-deo-kinh-1.jpg'
+              }
+              className={`object-cover rounded-full ${classSize}`}
+              alt=''
+            />
+          </div>
+        </div>
       </div>
-      <div className='absolute w-full h-full rounded-full avatar'></div>
-      <div className='w-[calc(100%-4px)] h-[calc(100%-4px)] bg-white absolute rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'></div>
     </div>
   );
 };

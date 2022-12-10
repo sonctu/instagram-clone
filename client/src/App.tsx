@@ -12,10 +12,14 @@ import Register from './pages/Register';
 import ForgottenPassword from './pages/ForgottenPassword';
 import Explore from './pages/Explore';
 import Profile from './pages/Profile';
+import Activity from './pages/Activity';
+import Inbox from './pages/Inbox';
+import Comment from './pages/Comment';
+import EditProfile from './pages/EditProfile';
 
 function App() {
   const { setCurrentUser } = useUserStore((state) => state);
-  const [cookies, setCookie] = useCookies(['accessToken']);
+  const [_, setCookie] = useCookies(['accessToken']);
   useEffect(() => {
     const isLogin = getIsLogin();
     if (isLogin) {
@@ -29,16 +33,17 @@ function App() {
   return (
     <div className='App'>
       <Routes>
-        <Route
-          path='/'
-          element={getIsLogin() && cookies.accessToken ? <Home></Home> : <Login></Login>}
-        ></Route>
+        <Route path='/' element={getIsLogin() ? <Home></Home> : <Login></Login>}></Route>
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/forgotten-password' element={<ForgottenPassword></ForgottenPassword>}></Route>
         <Route path='/explore' element={<Explore></Explore>}></Route>
         <Route path='/profile/:id/' element={<Profile></Profile>}></Route>
         <Route path='/profile/:id/:model' element={<Profile></Profile>}></Route>
+        <Route path='/accounts/activity' element={<Activity></Activity>}></Route>
+        <Route path='/accounts/edit' element={<EditProfile></EditProfile>}></Route>
+        <Route path='/direct/inbox' element={<Inbox></Inbox>}></Route>
+        <Route path='/p/:postId/comments' element={<Comment></Comment>}></Route>
         <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
       </Routes>
     </div>

@@ -1,21 +1,31 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { IPosts } from '~/types/post';
 import AvatarGradient from '../Common/AvatarGradient';
 import CommentIcon from '../Icons/CommentIcon';
 import HeartIcon from '../Icons/HeartIcon';
 import OptionIcon from '../Icons/OptionIcon';
 import SaveIcon from '../Icons/SaveIcon';
 import ShareIcon from '../Icons/ShareIcon';
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+import PinkHeartIcon from '../Icons/PinkHeartIcon';
 
-const PostItem: FC = () => {
+const PostItem: FC<IPosts> = ({ userId, createdAt, description, _id }) => {
+  const { avatar, username } = userId;
+  const dateTime = moment(createdAt).startOf('day').fromNow();
+  const navigate = useNavigate();
+  const [like, setLike] = useState(false);
   return (
     <div>
       <div className='flex items-center justify-between px-4 py-2'>
         <div className='flex items-center gap-2'>
-          <div>
-            <AvatarGradient size='medium'></AvatarGradient>
-          </div>
+          <AvatarGradient size='medium' url={avatar}></AvatarGradient>
           <div className='flex flex-col text-graySecondary'>
-            <h3 className='text-sm font-semibold'>khanhvyccf</h3>
+            <div className='flex items-center gap-2'>
+              <h3 className='text-sm font-semibold'>{username || 'khanhvyccf'}</h3>
+              <div className='w-1 h-1 rounded-full bg-graySecondary'></div>
+              <button className='text-sm font-medium text-bluePrimary'>Theo dõi</button>
+            </div>
             <span className='inline-block text-xs'>Singapore</span>
           </div>
         </div>
@@ -33,24 +43,34 @@ const PostItem: FC = () => {
       <div className='px-4 mb-8'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-3 py-3'>
-            <HeartIcon></HeartIcon>
-            <CommentIcon></CommentIcon>
+            <button onClick={() => setLike(!like)}>
+              {like ? (
+                <div className='animation-heart'>
+                  <PinkHeartIcon></PinkHeartIcon>
+                </div>
+              ) : (
+                <HeartIcon></HeartIcon>
+              )}
+            </button>
+            <button onClick={() => navigate(`/p/${_id}/comments`)}>
+              <CommentIcon></CommentIcon>
+            </button>
             <ShareIcon></ShareIcon>
           </div>
-          <div>
+          <button>
             <SaveIcon></SaveIcon>
-          </div>
+          </button>
         </div>
         <div className='mb-2 text-sm font-semibold text-graySecondary'>24,955 lượt thích</div>
         <div className='flex gap-2 text-sm text-graySecondary'>
           <div>
-            <h3 className='inline-block mr-2 font-semibold'>khanhvyccf</h3>Cà phê, đọc sách, chuyện
-            trò cùng nhau đii ✏️
+            <h3 className='inline-block mr-2 font-semibold'>khanhvyccf</h3>
+            <span>{description || 'Cà phê, đọc sách, chuyện trò cùng nhau đii ✏️'}</span>
           </div>
         </div>
         <div className='my-1 text-sm text-grayText'>Xem tất cả 55 bình luận</div>
         <div>
-          <span className='text-grayText text-[10px] uppercase'>13 giờ trước</span>
+          <span className='text-grayText text-[10px] uppercase'>{dateTime || '13 giờ trước'}</span>
           <span className='ml-2 text-xs font-semibold text-graySecondary'>Xem bản dịch</span>
         </div>
       </div>

@@ -1,22 +1,17 @@
 import { FC } from 'react';
+import { handleSetSize } from '~/utils/constants';
 import avatar from '../../assets/avatar.jpg';
 
 interface AvatarProps {
-  size?: 'super' | 'big' | 'medium' | 'small';
+  size?: 'super' | 'big' | 'large' | 'medium' | 'small';
+  url?: string;
 }
 
-const Avatar: FC<AvatarProps> = ({ size = 'medium' }) => {
-  const classSize =
-    size === 'super'
-      ? 'w-[77px] h-[77px]'
-      : size === 'big'
-      ? 'w-14 h-14'
-      : size === 'medium'
-      ? 'w-8 h-8'
-      : 'w-6 h-6';
+const Avatar: FC<AvatarProps> = ({ size = 'medium', url }) => {
+  const classSize = handleSetSize(size);
   return (
     <div className={classSize}>
-      <img src={avatar} alt='avatar' className='object-cover w-full h-full rounded-full' />
+      <img src={url || avatar} alt='avatar' className='object-cover w-full h-full rounded-full' />
     </div>
   );
 };

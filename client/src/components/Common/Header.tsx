@@ -1,13 +1,17 @@
 import { FC, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useToggleModal } from '~/store/store';
 import instagram from '../../assets/instagram.png';
 import HeartIcon from '../Icons/HeartIcon';
-import Messenger from '../Icons/Messenger';
 import NewsIcon from '../Icons/NewsIcon';
 import PlusIcon from '../Icons/PlusIcon';
 import PostIcon from '../Icons/PostIcon';
+import ModalAddPost from '../Modal/ModalAddPost';
 
 const Header: FC = () => {
   const [show, setShow] = useState(false);
+  const { handleOpenModal } = useToggleModal();
+
   return (
     <header className='fixed top-0 left-0 z-50 flex items-center justify-between w-full px-4 py-2 bg-white border-b border-grayPrimary'>
       <div className='h-[30px]'>
@@ -22,7 +26,11 @@ const Header: FC = () => {
               show ? 'visible opacity-100 translate-y-0' : 'invisible opacity-0 translate-y-1'
             }`}
           >
-            <div className='flex items-center justify-between px-4 py-2'>
+            <div
+              aria-hidden
+              className='flex items-center justify-between px-4 py-2'
+              onClick={handleOpenModal}
+            >
               <span className='text-sm text-graySecondary'>Bài viết</span>
               <PostIcon></PostIcon>
             </div>
@@ -32,13 +40,11 @@ const Header: FC = () => {
             </div>
           </div>
         </div>
-        <div>
-          <Messenger></Messenger>
-        </div>
-        <div>
+        <Link to='/accounts/activity'>
           <HeartIcon></HeartIcon>
-        </div>
+        </Link>
       </div>
+      <ModalAddPost></ModalAddPost>
     </header>
   );
 };

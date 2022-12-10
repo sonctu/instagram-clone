@@ -28,7 +28,8 @@ const User = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: "",
+      default:
+        "https://res.cloudinary.com/dyq35jdkl/image/upload/v1670470288/instagram-clone/avatar_dndzkl.jpg",
     },
     followers: [
       {

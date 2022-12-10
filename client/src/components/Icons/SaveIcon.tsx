@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { IColorIcon } from '~/types/global';
+import { IPropsIcon } from '~/types/global';
 
-const SaveIcon: FC<IColorIcon> = ({ color = '#262626' }) => {
+const SaveIcon: FC<IPropsIcon> = ({ color = '#262626', colorFill = 'none' }) => {
   return (
     <svg
       aria-label='Lưu'
@@ -14,7 +14,7 @@ const SaveIcon: FC<IColorIcon> = ({ color = '#262626' }) => {
       width='24'
     >
       <polygon
-        fill='none'
+        fill={colorFill}
         points='20 21 12 13.44 4 21 4 3 20 3 20 21'
         stroke='currentColor'
         strokeLinecap='round'

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import Avatar from '~/components/Common/Avatar';
 import ChevronDown from '~/components/Icons/ChevronDown';
 import DiscoverIcon from '~/components/Icons/DiscoverIcon';
@@ -11,15 +11,18 @@ import SaveIcon from '~/components/Icons/SaveIcon';
 import PostGridIcon from '~/components/Icons/PostGridIcon';
 import FeedIcon from '~/components/Icons/FeedIcon';
 import FeedItem from '~/components/Common/FeedItem';
-import { NavLink, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import PostList from '~/components/Home/PostList';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '~/services/user';
 import { useCookies } from 'react-cookie';
+import { useUserStore } from '~/store/store';
+import { IUser } from '~/types/auth';
 
 const Profile: FC = () => {
   const { model, id } = useParams();
   const [cookies] = useCookies(['accessToken']);
+  const { currentUser } = useUserStore();
 
   const { data } = useQuery({
     queryKey: ['user', id],
@@ -27,12 +30,30 @@ const Profile: FC = () => {
     enabled: !!id && !!cookies.accessToken,
   });
 
+  const profileList = useMemo(() => [], []);
+
+  const [follow, setFollow] = useState(false);
+
+  const [personal, setPersonal] = useState(true);
+
+  const [userData, setUserData] = useState<IUser>();
+
+  useEffect(() => {
+    if (id === currentUser?._id) {
+      setPersonal(true);
+      setUserData(currentUser as IUser);
+    } else {
+      setPersonal(false);
+      setUserData(data?.data);
+    }
+  }, [currentUser, data?.data, id]);
+
   return (
     <MainLayout>
-      <section className='flex items-center justify-between px-4 py-3 border-b border-grayPrimary'>
+      <section className='flex items-center justify-between px-4 py-3 border-b h-11 border-grayPrimary'>
         <SettingIcon></SettingIcon>
         <div className='flex items-center'>
-          <h3 className='font-semibold text-graySecondary'>{data?.data.username}</h3>
+          <h3 className='font-semibold text-graySecondary'>{userData?.username}</h3>
           <ChevronDown></ChevronDown>
         </div>
         <DiscoverIcon></DiscoverIcon>
@@ -41,26 +62,46 @@ const Profile: FC = () => {
         <div className='px-3 py-4'>
           <div className='flex items-center'>
             <Avatar size='super'></Avatar>
-            <div className='ml-4'>
-              <div className='flex items-center'>
+            <div className='flex-1 ml-8'>
+              <div className='flex items-center mb-4'>
                 <h2 className='mr-4 text-2xl font-light text-graySecondary'>
-                  {data?.data.username}
+                  {userData?.username}
                 </h2>
                 <OptionIcon></OptionIcon>
               </div>
-              <div className='flex items-center gap-1 mt-4'>
-                <button className='flex items-center pl-3 pr-2 py-[5px] border rounded-[4px] border-grayPrimary'>
-                  <span className='text-sm font-semibold text-graySecondary'>Đang theo dõi</span>
-                  <div>
-                    <ChevronDown></ChevronDown>
+              <div>
+                {personal ? (
+                  <Link to='/accounts/edit' className='inline-block w-full'>
+                    <button className='w-full px-4 py-2 text-sm font-semibold rounded bg-grayBtn'>
+                      Edit profile
+                    </button>
+                  </Link>
+                ) : (
+                  <div className='flex items-center justify-between gap-1'>
+                    <div>
+                      {follow ? (
+                        <button className='flex items-center px-4 py-[6px] bg-grayBtn rounded'>
+                          <span className='text-sm font-semibold text-graySecondary'>
+                            Following
+                          </span>
+                          <div>
+                            <ChevronDown></ChevronDown>
+                          </div>
+                        </button>
+                      ) : (
+                        <button className='flex items-center px-4 py-[6px] bg-bluePrimary rounded'>
+                          <span className='text-sm font-semibold text-white'>Follow</span>
+                        </button>
+                      )}
+                    </div>
+                    <button className='px-4 py-[6px] flex-1 bg-grayBtn text-sm font-semibold rounded text-graySecondary'>
+                      Message
+                    </button>
+                    <button className='px-2 py-[6px] bg-grayBtn flex items-center justify-center w-[34px] h-[32px] rounded-[4px]'>
+                      <DiscoverIcon></DiscoverIcon>
+                    </button>
                   </div>
-                </button>
-                <button className='px-3 py-[5px] text-sm font-semibold border rounded-[4px] border-grayPrimary text-graySecondary'>
-                  Nhắn tin
-                </button>
-                <button className='p-[6px] flex items-center justify-center w-[34 px] h-[32px] border rounded-[4px] border-grayPrimary'>
-                  <DiscoverIcon></DiscoverIcon>
-                </button>
+                )}
               </div>
             </div>
           </div>
@@ -82,16 +123,15 @@ const Profile: FC = () => {
       <section className='flex items-center py-3 mt-4 text-sm border-y border-grayPrimary'>
         <div className='flex flex-col items-center flex-1'>
           <div className='font-medium text-graySecondary'>659</div>
-          <div className='text-grayText'>bài viết</div>
+          <div className='text-grayText'>posts</div>
         </div>
         <div className='flex flex-col items-center flex-1'>
           <div className='font-medium text-graySecondary'>721K</div>
-          <div className='text-grayText'>người theo dõi</div>
+          <div className='text-grayText'>followers</div>
         </div>
         <div className='flex flex-col items-center flex-1'>
-          <div className='text-grayText'>Đang theo dõi</div>
           <div className='font-medium text-graySecondary'>973</div>
-          <div className='text-grayText'>người dùng</div>
+          <div className='text-grayText'>following</div>
         </div>
       </section>
       <section className='mb-14'>

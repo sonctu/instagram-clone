@@ -1,7 +1,7 @@
 import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import Button from '~/components/Form/Button';
+import Button from '~/components/Form/ButtonForm';
 import BackIcon from '~/components/Icons/BackIcon';
 import FormLayout from '~/layouts/FormLayout';
 

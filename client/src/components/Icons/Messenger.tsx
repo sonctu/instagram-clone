@@ -1,12 +1,13 @@
 import { FC } from 'react';
+import { IColorIcon } from '~/types/global';
 
-const Messenger: FC = () => {
+const Messenger: FC<IColorIcon> = ({ color = '#262626' }) => {
   return (
     <svg
       aria-label='Messenger'
       className='_ab6-'
-      color='#262626'
-      fill='#262626'
+      color={color}
+      fill={color}
       height='24'
       role='img'
       viewBox='0 0 24 24'

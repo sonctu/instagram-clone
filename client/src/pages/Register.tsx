@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Button from '~/components/Form/Button';
+import ButtonForm from '~/components/Form/ButtonForm';
 import ButtonFacebook from '~/components/Form/ButtonFacebook';
 import Divider from '~/components/Form/Divider';
 import Input from '~/components/Form/Input';
@@ -80,7 +80,11 @@ const Register: FC = () => {
           <Input control={control} name='username' placeholder='Username'></Input>
           <InputPassword control={control}></InputPassword>
         </div>
-        <Button type='submit' text='Sign Up' isLoading={registerUserMutation.isLoading}></Button>
+        <ButtonForm
+          type='submit'
+          text='Sign Up'
+          isLoading={registerUserMutation.isLoading}
+        ></ButtonForm>
         <div className='fixed bottom-0 w-full py-3 text-sm text-center transition-all border-t sm:pt-5 sm:pb-2 sm:relative sm:border-transparent border-grayPrimary'>
           Do not have an account?{' '}
           <Link to='/login' className='font-semibold cursor-pointer'>

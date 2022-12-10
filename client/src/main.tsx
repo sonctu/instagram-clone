@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <CookiesProvider>
           <App />
         </CookiesProvider>
-        <ReactQueryDevtools initialIsOpen={true} position={'top-right'} />
+        {/* <ReactQueryDevtools initialIsOpen={true} position={'top-right'} /> */}
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>,

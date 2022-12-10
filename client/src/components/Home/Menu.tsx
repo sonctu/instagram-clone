@@ -3,7 +3,6 @@ import MenuItem from './MenuItem';
 import MenuNews from './MenuNews';
 
 const Menu: FC = () => {
-  console.log('re-render');
   return (
     <section className='flex gap-4 overflow-y-auto scrollbar-hide'>
       <MenuNews></MenuNews>

@@ -11,6 +11,7 @@ module.exports = {
         graySecondary: '#262626',
         grayText: '#8e8e8e',
         bgColorPrimary: '#fafafa',
+        grayBtn: '#efefef',
       },
     },
   },
