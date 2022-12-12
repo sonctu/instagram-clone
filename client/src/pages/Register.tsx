@@ -12,9 +12,9 @@ import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '~/services/auth';
 import { getIsLogin, LOGINKEY } from '~/utils/constants';
 import { useUserStore } from '~/store/store';
-import { useCookies } from 'react-cookie';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import cookies from '~/utils/cookies';
 
 const initialFormState: FormState = {
   email: '',
@@ -31,8 +31,6 @@ const schema = yup.object({
 });
 const Register: FC = () => {
   const { setCurrentUser } = useUserStore((state) => state);
-
-  const [_, setCookie] = useCookies(['accessToken']);
 
   const { control, handleSubmit, reset } = useForm<FormState>({
     defaultValues: initialFormState,
@@ -51,7 +49,8 @@ const Register: FC = () => {
       onSuccess: (data) => {
         localStorage.setItem(LOGINKEY, JSON.stringify(true));
         setCurrentUser(data.data);
-        setCookie('accessToken', data.accessToken);
+        cookies.set('accessToken', data.accessToken);
+        localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
         reset(initialFormState);
       },
       onError: (error) => {

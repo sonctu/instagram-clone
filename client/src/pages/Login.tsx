@@ -15,7 +15,7 @@ import FormLayout from '~/layouts/FormLayout';
 import Input from '~/components/Form/Input';
 import InputPassword from '~/components/Form/InputPassword';
 import { getIsLogin, LOGINKEY } from '~/utils/constants';
-import { useCookies } from 'react-cookie';
+import cookies from '~/utils/cookies';
 
 const initialFormState: FormStateLogin = {
   email: '',
@@ -29,8 +29,6 @@ const schema = yup.object({
 
 const Login: FC = () => {
   const { setCurrentUser } = useUserStore((state) => state);
-
-  const [_, setCookie] = useCookies(['accessToken']);
 
   const { handleSubmit, control, reset } = useForm<FormStateLogin>({
     defaultValues: initialFormState,
@@ -49,7 +47,8 @@ const Login: FC = () => {
       onSuccess: (data) => {
         localStorage.setItem(LOGINKEY, JSON.stringify(true));
         setCurrentUser(data.data);
-        setCookie('accessToken', data.accessToken);
+        cookies.set('accessToken', data.accessToken);
+        localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
         reset(initialFormState);
       },
       onError: (error) => {

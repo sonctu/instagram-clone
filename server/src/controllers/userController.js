@@ -1,3 +1,4 @@
+import cloudinary from "../configs/cloudinary.js";
 import User from "../models/User.js";
 
 const userController = {
@@ -29,6 +30,33 @@ const userController = {
   },
   updateUser: async (req, res) => {
     try {
+      const { avatar, fullname, username, website, story, mobile, gender } =
+        req.body;
+      const result = await cloudinary.uploader.upload(avatar, {
+        folder: "instagram-clone/avatar",
+        crop: "scale",
+        width: 100,
+      });
+      const id = req.user.id;
+      const updateUser = await User.findByIdAndUpdate(
+        id,
+        {
+          fullname,
+          username,
+          website,
+          story,
+          mobile,
+          gender,
+          avatar: result.secure_url,
+        },
+        {
+          new: true,
+        }
+      );
+      return res.status(200).json({
+        msg: "Update user success",
+        data: updateUser,
+      });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }

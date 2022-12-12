@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { FC, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { getSearchUser } from '~/services/user';
 import SearchIcon from '../Icons/SearchIcon';
 import XCircleIcon from '../Icons/XCircleIcon';
@@ -10,14 +9,12 @@ import { useNavigate } from 'react-router-dom';
 const Search: FC = () => {
   const [searchUser, setSearchUser] = useState('');
 
-  const [cookies, _] = useCookies(['accessToken']);
-
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: ['searchUser', searchUser],
     queryFn: () => getSearchUser(searchUser),
-    enabled: !!cookies.accessToken && !!searchUser,
+    enabled: !!searchUser,
   });
 
   const handleCloseSearch = () => {

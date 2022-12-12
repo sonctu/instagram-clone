@@ -1,13 +1,19 @@
-import { FC, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { FC, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Avatar from '~/components/Common/Avatar';
-import Button from '~/components/Common/Button';
 import Heading from '~/components/Common/Heading';
 import FormGroupEdit from '~/components/EditProfile/FormGroupEdit';
 import FormGroupEditTextarea from '~/components/EditProfile/FormGroupEditTextarea';
+import ButtonForm from '~/components/Form/ButtonForm';
 import MainLayout from '~/layouts/MainLayout';
+import { updateUser } from '~/services/user';
+import { useUserStore } from '~/store/store';
+import { IEditUser } from '~/types/auth';
 
 const EditProfile: FC = () => {
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<IEditUser>({
+    avatar: '',
     fullname: '',
     username: '',
     website: '',
@@ -16,16 +22,60 @@ const EditProfile: FC = () => {
     mobile: '',
     gender: 'male',
   });
+  const [fileAvatar, setFileAvatar] = useState<string>('');
+  const { currentUser, setCurrentUser } = useUserStore((state) => state);
+  const updateUserMutation = useMutation({
+    mutationFn: (body: IEditUser) => updateUser(body),
+  });
+  useEffect(() => {
+    if (currentUser) {
+      const { email, username, fullname, website, story, mobile, gender, avatar } = currentUser;
+      setUserData({
+        fullname,
+        username,
+        website,
+        story,
+        email,
+        mobile,
+        gender,
+        avatar,
+      });
+    }
+  }, [currentUser]);
+  const queryClient = useQueryClient();
   const handleEditProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(userData);
+    updateUserMutation.mutate(
+      { ...userData, avatar: fileAvatar || (currentUser?.avatar as string) },
+      {
+        onSuccess(data) {
+          setCurrentUser(data.data);
+          queryClient.invalidateQueries({ queryKey: ['posts'] });
+          toast.success('Update user success');
+          console.log(data);
+        },
+      },
+    );
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    console.log(e.target.value);
     setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = (e.target.files as FileList)[0];
+    setUserData((prev) => ({ ...prev, avatar: URL.createObjectURL(file) }));
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setFileAvatar(reader.result as string);
+      };
+    }
+  };
+
   return (
     <MainLayout>
       <section>
@@ -33,7 +83,7 @@ const EditProfile: FC = () => {
         <div className='px-5 mt-11 mb-14'>
           <form onSubmit={handleEditProfile}>
             <div className='flex items-center gap-4 pt-5 mb-4'>
-              <Avatar size='large'></Avatar>
+              <Avatar size='large' url={userData.avatar}></Avatar>
               <div>
                 <h3 className='text-xl leading-6'>anhson1204</h3>
                 <div>
@@ -46,7 +96,7 @@ const EditProfile: FC = () => {
                     id='avatar'
                     name='avatar'
                     className='hidden'
-                    onChange={handleChange}
+                    onChange={handleChangeAvatar}
                   />
                 </div>
               </div>
@@ -94,7 +144,11 @@ const EditProfile: FC = () => {
                 name='mobile'
                 value={userData.mobile}
               ></FormGroupEdit>
-              <Button type='submit'>Submit</Button>
+              <ButtonForm
+                type='submit'
+                isLoading={updateUserMutation.isLoading}
+                text='Submit'
+              ></ButtonForm>
             </div>
           </form>
         </div>

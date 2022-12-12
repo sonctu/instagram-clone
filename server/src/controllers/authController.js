@@ -5,14 +5,14 @@ import User from "../models/User.js";
 const authController = {
   generateToken: (user) => {
     const accessToken = jwt.sign(
-      { id: user._id },
+      { id: user._id || user.id },
       process.env.ACCESS_TOKEN_KEY,
       {
-        expiresIn: "1d",
+        expiresIn: "30s",
       }
     );
     const refreshToken = jwt.sign(
-      { id: user._id },
+      { id: user._id || user.id },
       process.env.REFRESH_TOKEN_KEY,
       {
         expiresIn: "30d",
@@ -99,37 +99,31 @@ const authController = {
       return res.status(500).json({ msg: error.message });
     }
   },
-  reloadGetUser: (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken)
-      return res.status(401).json({ msg: "Not authenticated" });
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_KEY,
-      async (err, data) => {
-        if (err) return res.status(401).json({ msg: err });
+  reloadGetUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        authController.generateToken(user);
 
-        const user = await User.findOne({ id: data.id });
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          authController.generateToken(data);
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        path: "/",
+        sameSite: "strict",
+        secure: false,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      });
 
-        res.cookie("refreshToken", newRefreshToken, {
-          httpOnly: true,
-          path: "/",
-          sameSite: "strict",
-          secure: false,
-          maxAge: 30 * 24 * 60 * 60 * 1000,
-        });
-        return res.status(200).json({
-          msg: "Reload success",
-          accessToken: newAccessToken,
-          data: {
-            ...user._doc,
-            password: "",
-          },
-        });
-      }
-    );
+      return res.status(200).json({
+        msg: "Reload success",
+        accessToken: newAccessToken,
+        data: {
+          ...user._doc,
+          password: "",
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
   },
   refreshToken: (req, res) => {
     const refreshToken = req.cookies.refreshToken;

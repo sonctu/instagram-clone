@@ -15,19 +15,17 @@ import { Link, NavLink, useParams } from 'react-router-dom';
 import PostList from '~/components/Home/PostList';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '~/services/user';
-import { useCookies } from 'react-cookie';
 import { useUserStore } from '~/store/store';
 import { IUser } from '~/types/auth';
 
 const Profile: FC = () => {
   const { model, id } = useParams();
-  const [cookies] = useCookies(['accessToken']);
   const { currentUser } = useUserStore();
 
   const { data } = useQuery({
     queryKey: ['user', id],
     queryFn: () => getUser(id as string),
-    enabled: !!id && !!cookies.accessToken,
+    enabled: !!id,
   });
 
   const profileList = useMemo(() => [], []);
@@ -47,7 +45,6 @@ const Profile: FC = () => {
       setUserData(data?.data);
     }
   }, [currentUser, data?.data, id]);
-
   return (
     <MainLayout>
       <section className='flex items-center justify-between px-4 py-3 border-b h-11 border-grayPrimary'>
@@ -61,7 +58,7 @@ const Profile: FC = () => {
       <section>
         <div className='px-3 py-4'>
           <div className='flex items-center'>
-            <Avatar size='super'></Avatar>
+            <Avatar size='super' url={userData?.avatar}></Avatar>
             <div className='flex-1 ml-8'>
               <div className='flex items-center mb-4'>
                 <h2 className='mr-4 text-2xl font-light text-graySecondary'>

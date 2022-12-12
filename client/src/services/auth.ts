@@ -16,13 +16,13 @@ export const registerUser = async ({ email, password, fullname, username }: Form
   return response.data;
 };
 
-export const reload = async () => {
-  const response = await instance.post<IUserResponse>('/v1/auth/reload');
+export const refreshToken = async () => {
+  const response = await instance.post<IUserRefresh>('/v1/auth/refreshToken');
   return response.data;
 };
 
-export const refreshToken = async () => {
-  const response = await instance.post<IUserRefresh>('/v1/auth/refreshToken');
+export const reload = async () => {
+  const response = await instanceJWT.post<IUserResponse>('/v1/auth/reload');
   return response.data;
 };
 

@@ -3,12 +3,13 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { CookiesProvider } from 'react-cookie';
 
 import App from './App';
 
 // styles
 import './index.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,10 +27,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <CookiesProvider>
-          <App />
-        </CookiesProvider>
-        {/* <ReactQueryDevtools initialIsOpen={true} position={'top-right'} /> */}
+        <App />
+        <ToastContainer />
+        <ReactQueryDevtools initialIsOpen={true} position={'top-right'} />
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>,

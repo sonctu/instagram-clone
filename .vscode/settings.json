@@ -6,6 +6,7 @@
   "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
   "javascript.suggestionActions.enabled": false,
   "cSpell.words": [
+    "cloudinary",
     "fullname",
     "hookform",
     "LOGINKEY",

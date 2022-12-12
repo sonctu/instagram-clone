@@ -2,7 +2,6 @@ import './App.css';
 import { getIsLogin } from './utils/constants';
 import { reload } from './services/auth';
 import { Route, Routes } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 import { useUserStore } from './store/store';
 import Home from './pages/Home';
@@ -16,20 +15,20 @@ import Activity from './pages/Activity';
 import Inbox from './pages/Inbox';
 import Comment from './pages/Comment';
 import EditProfile from './pages/EditProfile';
+import cookies from './utils/cookies';
 
 function App() {
   const { setCurrentUser } = useUserStore((state) => state);
-  const [_, setCookie] = useCookies(['accessToken']);
   useEffect(() => {
     const isLogin = getIsLogin();
     if (isLogin) {
       (async function refreshUser() {
         const res = await reload();
         setCurrentUser(res.data);
-        setCookie('accessToken', res.accessToken);
+        cookies.set('accessToken', res.accessToken);
       })();
     }
-  }, [setCookie, setCurrentUser]);
+  }, [setCurrentUser]);
   return (
     <div className='App'>
       <Routes>

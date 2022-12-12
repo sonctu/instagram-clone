@@ -39,6 +39,11 @@ export type IUserRes = Omit<IUserResponse, 'accessToken'>;
 
 export type ISearchUser = Pick<IUser, '_id' | 'avatar' | 'fullname' | 'username'>;
 
+export type IEditUser = Pick<
+  IUser,
+  'avatar' | 'fullname' | 'username' | 'website' | 'email' | 'mobile' | 'gender' | 'story'
+>;
+
 export interface ISearchUserResponse {
   msg: string;
   data: ISearchUser[];
