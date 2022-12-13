@@ -1,24 +1,23 @@
 import { FC } from 'react';
 import Header from '~/components/Common/Header';
-import { useCookies } from 'react-cookie';
 import { useUserStore } from '~/store/store';
 import { logoutUser } from '~/services/auth';
 import Menu from '~/components/Home/Menu';
 import PostList from '~/components/Home/PostList';
-import { LOGINKEY } from '~/utils/constants';
+import { LOGINKEY, storage } from '~/utils/constants';
 import MainLayout from '~/layouts/MainLayout';
 import ButtonForm from '~/components/Form/ButtonForm';
+import cookies from '~/utils/cookies';
 
 const Home: FC = () => {
-  const [cookies, _, removeCookie] = useCookies(['accessToken']);
   const { setCurrentUser } = useUserStore((state) => state);
   const handleLogout = async () => {
-    if (cookies.accessToken) {
+    if (storage.get(LOGINKEY)) {
       await logoutUser();
+      storage.remove(LOGINKEY);
+      cookies.remove('accessToken');
+      setCurrentUser(null);
     }
-    localStorage.removeItem(LOGINKEY);
-    removeCookie('accessToken');
-    setCurrentUser(null);
   };
   return (
     <MainLayout>

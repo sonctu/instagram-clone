@@ -40,7 +40,7 @@ const authController = {
           path: "/",
           sameSite: "strict",
           secure: false,
-          maxAge: 30 * 24 * 60 * 60 * 1000,
+          maxAge: 30 * 7 * 24 * 60 * 60 * 100,
         });
 
         return res.status(200).json({
@@ -82,7 +82,7 @@ const authController = {
         path: "/",
         sameSite: "strict",
         secure: false,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        maxAge: 30 * 7 * 24 * 60 * 60 * 100,
       });
 
       const user = await newUser.save();
@@ -101,26 +101,39 @@ const authController = {
   },
   reloadGetUser: async (req, res) => {
     try {
-      const user = await User.findById(req.user.id);
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        authController.generateToken(user);
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken)
+        return res.status(401).json({ msg: "Not authenticated" });
 
-      res.cookie("refreshToken", newRefreshToken, {
-        httpOnly: true,
-        path: "/",
-        sameSite: "strict",
-        secure: false,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
+      jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_KEY,
+        async (err, data) => {
+          if (err) return res.status(401).json({ msg: err });
 
-      return res.status(200).json({
-        msg: "Reload success",
-        accessToken: newAccessToken,
-        data: {
-          ...user._doc,
-          password: "",
-        },
-      });
+          const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+            authController.generateToken(data);
+
+          res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            path: "/",
+            sameSite: "strict",
+            secure: false,
+            maxAge: 30 * 7 * 24 * 60 * 60 * 1000,
+          });
+
+          const user = await User.findById(data.id);
+
+          return res.status(200).json({
+            msg: "Reload success",
+            accessToken: newAccessToken,
+            data: {
+              ...user._doc,
+              password: "",
+            },
+          });
+        }
+      );
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
@@ -144,7 +157,7 @@ const authController = {
           path: "/",
           sameSite: "strict",
           secure: false,
-          maxAge: 30 * 24 * 60 * 60 * 1000,
+          maxAge: 30 * 7 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({

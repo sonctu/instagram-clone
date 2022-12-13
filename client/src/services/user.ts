@@ -15,7 +15,16 @@ export const getUser = async (id: string) => {
   return response.data;
 };
 
-export const updateUser = async (userData: IEditUser) => {
-  const response = await instanceJWT.put('/v1/user/', userData);
+export const updateUser = async ({
+  userData,
+  fileAvatar,
+}: {
+  userData: IEditUser;
+  fileAvatar: string;
+}) => {
+  const response = await instanceJWT.put('/v1/user/', {
+    ...userData,
+    fileAvatar,
+  });
   return response.data;
 };

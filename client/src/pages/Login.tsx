@@ -14,7 +14,7 @@ import Divider from '~/components/Form/Divider';
 import FormLayout from '~/layouts/FormLayout';
 import Input from '~/components/Form/Input';
 import InputPassword from '~/components/Form/InputPassword';
-import { getIsLogin, LOGINKEY } from '~/utils/constants';
+import { getIsLogin, LOGINKEY, storage } from '~/utils/constants';
 import cookies from '~/utils/cookies';
 
 const initialFormState: FormStateLogin = {
@@ -48,7 +48,7 @@ const Login: FC = () => {
         localStorage.setItem(LOGINKEY, JSON.stringify(true));
         setCurrentUser(data.data);
         cookies.set('accessToken', data.accessToken);
-        localStorage.setItem('accessToken', JSON.stringify(data.accessToken));
+        storage.set('accessToken', data.accessToken);
         reset(initialFormState);
       },
       onError: (error) => {

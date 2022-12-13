@@ -1,7 +1,19 @@
 export const LOGINKEY = 'logged_in';
 
+export const storage = {
+  get(key: string) {
+    return JSON.parse(localStorage.getItem(key) as string);
+  },
+  set(key: string, value: any) {
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+  remove(key: string) {
+    localStorage.removeItem(key);
+  },
+};
+
 export const getIsLogin: () => boolean = () => {
-  const isLogin = JSON.parse(localStorage.getItem(LOGINKEY) as string) || false;
+  const isLogin = storage.get(LOGINKEY) || false;
   return isLogin;
 };
 

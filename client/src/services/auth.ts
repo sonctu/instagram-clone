@@ -22,7 +22,7 @@ export const refreshToken = async () => {
 };
 
 export const reload = async () => {
-  const response = await instanceJWT.post<IUserResponse>('/v1/auth/reload');
+  const response = await instance.post<IUserResponse>('/v1/auth/reload');
   return response.data;
 };
 

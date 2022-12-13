@@ -7,7 +7,6 @@ const PostList: FC = () => {
   const { data } = useQuery({
     queryKey: ['posts'],
     queryFn: () => getAllPosts(),
-    staleTime: 0,
   });
 
   return (

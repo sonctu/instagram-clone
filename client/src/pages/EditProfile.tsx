@@ -25,7 +25,7 @@ const EditProfile: FC = () => {
   const [fileAvatar, setFileAvatar] = useState<string>('');
   const { currentUser, setCurrentUser } = useUserStore((state) => state);
   const updateUserMutation = useMutation({
-    mutationFn: (body: IEditUser) => updateUser(body),
+    mutationFn: (body: { userData: IEditUser; fileAvatar: string }) => updateUser(body),
   });
   useEffect(() => {
     if (currentUser) {
@@ -46,7 +46,7 @@ const EditProfile: FC = () => {
   const handleEditProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateUserMutation.mutate(
-      { ...userData, avatar: fileAvatar || (currentUser?.avatar as string) },
+      { userData, fileAvatar },
       {
         onSuccess(data) {
           setCurrentUser(data.data);

@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 import { refreshToken } from '../services/auth';
+import { storage } from './constants';
 import cookies from './cookies';
 
 const BASE_URL = import.meta.env.REACT_APP_BASE_URL || 'http://localhost:8000';
@@ -21,13 +22,14 @@ const createInstanceJWT = () => {
 
   newInstance.interceptors.request.use(
     async (config: AxiosRequestConfig) => {
-      const accessToken = cookies.get('accessToken');
+      const accessToken = cookies.get('accessToken') || storage.get('accessToken');
       const date = new Date();
       if (accessToken) {
         const decodedToken = jwt_decode<JwtPayload>(accessToken);
         if (decodedToken.exp && config.headers) {
           if (decodedToken?.exp * 1000 < date.getTime()) {
             const data = await refreshToken();
+            storage.set('accessToken', data.accessToken);
             cookies.set('accessToken', data.accessToken);
 
             (config?.headers as AxiosRequestHeaders)[

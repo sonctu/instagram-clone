@@ -1,5 +1,5 @@
 import './App.css';
-import { getIsLogin } from './utils/constants';
+import { getIsLogin, storage } from './utils/constants';
 import { reload } from './services/auth';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -26,6 +26,7 @@ function App() {
         const res = await reload();
         setCurrentUser(res.data);
         cookies.set('accessToken', res.accessToken);
+        storage.set('accessToken', res.accessToken);
       })();
     }
   }, [setCurrentUser]);

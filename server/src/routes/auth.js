@@ -14,11 +14,7 @@ router.post("/register", authController.registerUser);
 router.post("/refreshToken", authController.refreshToken);
 
 // Reload get user
-router.post(
-  "/reload",
-  middlewareController.verifyToken,
-  authController.reloadGetUser
-);
+router.post("/reload", authController.reloadGetUser);
 
 //Logout
 router.post(

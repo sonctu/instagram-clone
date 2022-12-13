@@ -30,13 +30,24 @@ const userController = {
   },
   updateUser: async (req, res) => {
     try {
-      const { avatar, fullname, username, website, story, mobile, gender } =
-        req.body;
-      const result = await cloudinary.uploader.upload(avatar, {
-        folder: "instagram-clone/avatar",
-        crop: "scale",
-        width: 100,
-      });
+      const {
+        avatar,
+        fullname,
+        username,
+        website,
+        story,
+        mobile,
+        gender,
+        fileAvatar,
+      } = req.body;
+      let result;
+      if (fileAvatar) {
+        result = await cloudinary.uploader.upload(fileAvatar, {
+          folder: "instagram-clone/avatar",
+          crop: "scale",
+          width: 100,
+        });
+      }
       const id = req.user.id;
       const updateUser = await User.findByIdAndUpdate(
         id,
@@ -47,12 +58,13 @@ const userController = {
           story,
           mobile,
           gender,
-          avatar: result.secure_url,
+          avatar: fileAvatar ? result.secure_url : avatar,
         },
         {
           new: true,
         }
       );
+
       return res.status(200).json({
         msg: "Update user success",
         data: updateUser,
