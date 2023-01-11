@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState, memo } from 'react';
 import Avatar from '~/components/Common/Avatar';
 import ChevronDown from '~/components/Icons/ChevronDown';
 import DiscoverIcon from '~/components/Icons/DiscoverIcon';
@@ -15,22 +15,23 @@ import { Link, NavLink, useParams } from 'react-router-dom';
 import PostList from '~/components/Home/PostList';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '~/services/user';
-import { useUserStore } from '~/store/store';
+import { useToggleModal, useUserStore, ModalType, useFollowStore } from '~/store/store';
 import { IUser } from '~/types/auth';
+import FollowButton from '~/components/Profile/FollowButton';
 
 const Profile: FC = () => {
   const { model, id } = useParams();
-  const { currentUser } = useUserStore();
+  const { currentUser } = useUserStore((state) => state);
+  const { handleOpenModal } = useToggleModal((state) => state);
+  const { handleSetFollow } = useFollowStore((state) => state);
 
   const { data } = useQuery({
     queryKey: ['user', id],
     queryFn: () => getUser(id as string),
-    enabled: !!id,
+    enabled: !!id && id !== currentUser?._id,
   });
 
-  const profileList = useMemo(() => [], []);
-
-  const [follow, setFollow] = useState(false);
+  // const profileList = useMemo(() => [], []);
 
   const [personal, setPersonal] = useState(true);
 
@@ -40,11 +41,16 @@ const Profile: FC = () => {
     if (id === currentUser?._id) {
       setPersonal(true);
       setUserData(currentUser as IUser);
+      handleSetFollow(currentUser?.followers as string[], currentUser?.followings as string[]);
     } else {
       setPersonal(false);
       setUserData(data?.data);
+      handleSetFollow(data?.data?.followers as string[], data?.data?.followings as string[]);
     }
-  }, [currentUser, data?.data, id]);
+  }, [currentUser, data?.data, handleSetFollow, id]);
+
+  if (!userData) return <div>profile</div>;
+
   return (
     <MainLayout>
       <section className='flex items-center justify-between px-4 py-3 border-b h-11 border-grayPrimary'>
@@ -75,22 +81,7 @@ const Profile: FC = () => {
                   </Link>
                 ) : (
                   <div className='flex items-center justify-between gap-1'>
-                    <div>
-                      {follow ? (
-                        <button className='flex items-center px-4 py-[6px] bg-grayBtn rounded'>
-                          <span className='text-sm font-semibold text-graySecondary'>
-                            Following
-                          </span>
-                          <div>
-                            <ChevronDown></ChevronDown>
-                          </div>
-                        </button>
-                      ) : (
-                        <button className='flex items-center px-4 py-[6px] bg-bluePrimary rounded'>
-                          <span className='text-sm font-semibold text-white'>Follow</span>
-                        </button>
-                      )}
-                    </div>
+                    <FollowButton userData={userData}></FollowButton>
                     <button className='px-4 py-[6px] flex-1 bg-grayBtn text-sm font-semibold rounded text-graySecondary'>
                       Message
                     </button>
@@ -122,19 +113,25 @@ const Profile: FC = () => {
           <div className='font-medium text-graySecondary'>659</div>
           <div className='text-grayText'>posts</div>
         </div>
-        <div className='flex flex-col items-center flex-1'>
-          <div className='font-medium text-graySecondary'>721K</div>
+        <button
+          onClick={() => handleOpenModal(ModalType.FOLLOWERS_USER)}
+          className='flex flex-col items-center flex-1'
+        >
+          <div className='font-medium text-graySecondary'>{userData.followers.length}</div>
           <div className='text-grayText'>followers</div>
-        </div>
-        <div className='flex flex-col items-center flex-1'>
-          <div className='font-medium text-graySecondary'>973</div>
+        </button>
+        <button
+          onClick={() => handleOpenModal(ModalType.FOLLOWINGS_USER)}
+          className='flex flex-col items-center flex-1'
+        >
+          <div className='font-medium text-graySecondary'>{userData.followings.length}</div>
           <div className='text-grayText'>following</div>
-        </div>
+        </button>
       </section>
       <section className='mb-14'>
         <ul className='flex items-center border-b border-grayPrimary'>
           <li className='flex justify-center flex-1 py-[10px]'>
-            <NavLink to={`/profile/${data?.data._id}/`}>
+            <NavLink to={`/profile/${userData._id}/`}>
               {({ isActive }) => (
                 <PostGridIcon color={isActive ? '#0095f6' : '#8e8e8e'}></PostGridIcon>
               )}
@@ -173,4 +170,4 @@ const Profile: FC = () => {
   );
 };
 
-export default Profile;
+export default memo(Profile);

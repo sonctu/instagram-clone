@@ -19,6 +19,7 @@ const Home: FC = () => {
       setCurrentUser(null);
     }
   };
+
   return (
     <MainLayout>
       <div className='mt-[46px]'>

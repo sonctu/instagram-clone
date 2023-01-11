@@ -12,6 +12,7 @@
     "LOGINKEY",
     "tailwindcss",
     "tanstack",
+    "unfollow",
     "zustand"
   ]
 }

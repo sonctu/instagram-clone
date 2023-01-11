@@ -10,8 +10,12 @@ interface AvatarProps {
 const Avatar: FC<AvatarProps> = ({ size = 'medium', url }) => {
   const classSize = handleSetSize(size);
   return (
-    <div className={classSize}>
-      <img src={url || avatar} alt='avatar' className='object-cover w-full h-full rounded-full' />
+    <div className={`shrink-0 ${classSize}`}>
+      <img
+        src={url || avatar}
+        alt='avatar'
+        className='object-cover w-full h-full rounded-full shrink-0'
+      />
     </div>
   );
 };

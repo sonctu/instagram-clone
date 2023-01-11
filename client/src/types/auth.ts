@@ -11,8 +11,8 @@ export interface IUser {
   address: string;
   avatar: string;
   email: string;
-  followers: [];
-  followings: [];
+  followers: string[];
+  followings: string[];
   fullname: string;
   gender: string;
   mobile: string;
@@ -32,6 +32,8 @@ export interface IUserResponse {
   data: IUser;
   accessToken: string;
 }
+
+export type IUserUpdateResponse = Omit<IUserResponse, 'accessToken'>;
 
 export type IUserRefresh = Omit<IUserResponse, 'data'>;
 

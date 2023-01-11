@@ -1,4 +1,4 @@
-import { IEditUser, ISearchUserResponse, IUserRes } from '~/types/auth';
+import { IEditUser, ISearchUserResponse, IUserRes, IUserUpdateResponse } from '~/types/auth';
 import { instanceJWT } from '~/utils/instance';
 
 export const getSearchUser = async (username: string) => {
@@ -15,6 +15,11 @@ export const getUser = async (id: string) => {
   return response.data;
 };
 
+export const getUserList = async (data: string[]) => {
+  const response = await Promise.all(data.map((e) => getUser(e)));
+  return response;
+};
+
 export const updateUser = async ({
   userData,
   fileAvatar,
@@ -22,9 +27,19 @@ export const updateUser = async ({
   userData: IEditUser;
   fileAvatar: string;
 }) => {
-  const response = await instanceJWT.put('/v1/user/', {
+  const response = await instanceJWT.put<IUserUpdateResponse>('/v1/user/', {
     ...userData,
     fileAvatar,
   });
+  return response.data;
+};
+
+export const followUser = async (id: string) => {
+  const response = await instanceJWT.put<IUserUpdateResponse>(`/v1/user/${id}/follow`);
+  return response.data;
+};
+
+export const unfollowUser = async (id: string) => {
+  const response = await instanceJWT.put<IUserUpdateResponse>(`/v1/user/${id}/unfollow`);
   return response.data;
 };

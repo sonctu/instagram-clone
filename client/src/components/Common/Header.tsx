@@ -1,12 +1,11 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useToggleModal } from '~/store/store';
+import { ModalType, useToggleModal } from '~/store/store';
 import instagram from '../../assets/instagram.png';
 import HeartIcon from '../Icons/HeartIcon';
 import NewsIcon from '../Icons/NewsIcon';
 import PlusIcon from '../Icons/PlusIcon';
 import PostIcon from '../Icons/PostIcon';
-import ModalAddPost from '../Modal/ModalAddPost';
 
 const Header: FC = () => {
   const [show, setShow] = useState(false);
@@ -29,7 +28,7 @@ const Header: FC = () => {
             <div
               aria-hidden
               className='flex items-center justify-between px-4 py-2'
-              onClick={handleOpenModal}
+              onClick={() => handleOpenModal(ModalType.POST_CREATOR)}
             >
               <span className='text-sm text-graySecondary'>Bài viết</span>
               <PostIcon></PostIcon>
@@ -44,7 +43,6 @@ const Header: FC = () => {
           <HeartIcon></HeartIcon>
         </Link>
       </div>
-      <ModalAddPost></ModalAddPost>
     </header>
   );
 };

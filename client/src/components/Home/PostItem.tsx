@@ -9,12 +9,15 @@ import ShareIcon from '../Icons/ShareIcon';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import PinkHeartIcon from '../Icons/PinkHeartIcon';
+import { useUserStore } from '~/store/store';
 
 const PostItem: FC<IPosts> = ({ userId, createdAt, description, _id }) => {
   const { avatar, username } = userId;
   const dateTime = moment(createdAt).startOf('day').fromNow();
   const navigate = useNavigate();
   const [like, setLike] = useState(false);
+  const { currentUser } = useUserStore((state) => state);
+
   return (
     <div>
       <div className='flex items-center justify-between px-4 py-2'>
@@ -23,8 +26,17 @@ const PostItem: FC<IPosts> = ({ userId, createdAt, description, _id }) => {
           <div className='flex flex-col text-graySecondary'>
             <div className='flex items-center gap-2'>
               <h3 className='text-sm font-semibold'>{username || 'khanhvyccf'}</h3>
-              <div className='w-1 h-1 rounded-full bg-graySecondary'></div>
-              <button className='text-sm font-medium text-bluePrimary'>Theo dõi</button>
+
+              {currentUser?._id === userId._id ? (
+                ''
+              ) : (
+                <>
+                  <div className='w-1 h-1 rounded-full bg-graySecondary'></div>
+                  <button className='text-sm font-medium text-bluePrimary'>
+                    {currentUser?.followings.includes(userId._id) ? 'Unfollow' : 'Follow'}
+                  </button>
+                </>
+              )}
             </div>
             <span className='inline-block text-xs'>Singapore</span>
           </div>

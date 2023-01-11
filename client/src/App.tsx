@@ -2,20 +2,24 @@ import './App.css';
 import { getIsLogin, storage } from './utils/constants';
 import { reload } from './services/auth';
 import { Route, Routes } from 'react-router-dom';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useUserStore } from './store/store';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import PageNotFound from './pages/PageNotFound';
-import Register from './pages/Register';
-import ForgottenPassword from './pages/ForgottenPassword';
-import Explore from './pages/Explore';
-import Profile from './pages/Profile';
-import Activity from './pages/Activity';
-import Inbox from './pages/Inbox';
-import Comment from './pages/Comment';
-import EditProfile from './pages/EditProfile';
+
 import cookies from './utils/cookies';
+import ModalManage from './components/Modal/ModalManage';
+import Spinner from './components/Common/Spinner';
+
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const PageNotFound = lazy(() => import('./pages/PageNotFound'));
+const Register = lazy(() => import('./pages/Register'));
+const ForgottenPassword = lazy(() => import('./pages/ForgottenPassword'));
+const Explore = lazy(() => import('./pages/Explore'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Activity = lazy(() => import('./pages/Activity'));
+const Inbox = lazy(() => import('./pages/Inbox'));
+const Comment = lazy(() => import('./pages/Comment'));
+const EditProfile = lazy(() => import('./pages/EditProfile'));
 
 function App() {
   const { setCurrentUser } = useUserStore((state) => state);
@@ -31,22 +35,28 @@ function App() {
     }
   }, [setCurrentUser]);
   return (
-    <div className='App'>
-      <Routes>
-        <Route path='/' element={getIsLogin() ? <Home></Home> : <Login></Login>}></Route>
-        <Route path='/register' element={<Register></Register>}></Route>
-        <Route path='/login' element={<Login></Login>}></Route>
-        <Route path='/forgotten-password' element={<ForgottenPassword></ForgottenPassword>}></Route>
-        <Route path='/explore' element={<Explore></Explore>}></Route>
-        <Route path='/profile/:id/' element={<Profile></Profile>}></Route>
-        <Route path='/profile/:id/:model' element={<Profile></Profile>}></Route>
-        <Route path='/accounts/activity' element={<Activity></Activity>}></Route>
-        <Route path='/accounts/edit' element={<EditProfile></EditProfile>}></Route>
-        <Route path='/direct/inbox' element={<Inbox></Inbox>}></Route>
-        <Route path='/p/:postId/comments' element={<Comment></Comment>}></Route>
-        <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
-      </Routes>
-    </div>
+    <Suspense fallback={<Spinner></Spinner>}>
+      <div className='App'>
+        <Routes>
+          <Route path='/' element={getIsLogin() ? <Home></Home> : <Login></Login>}></Route>
+          <Route path='/register' element={<Register></Register>}></Route>
+          <Route path='/login' element={<Login></Login>}></Route>
+          <Route
+            path='/forgotten-password'
+            element={<ForgottenPassword></ForgottenPassword>}
+          ></Route>
+          <Route path='/explore' element={<Explore></Explore>}></Route>
+          <Route path='/profile/:id/' element={<Profile></Profile>}></Route>
+          <Route path='/profile/:id/:model' element={<Profile></Profile>}></Route>
+          <Route path='/accounts/activity' element={<Activity></Activity>}></Route>
+          <Route path='/accounts/edit' element={<EditProfile></EditProfile>}></Route>
+          <Route path='/direct/inbox' element={<Inbox></Inbox>}></Route>
+          <Route path='/p/:postId/comments' element={<Comment></Comment>}></Route>
+          <Route path='*' element={<PageNotFound></PageNotFound>}></Route>
+        </Routes>
+        <ModalManage></ModalManage>
+      </div>
+    </Suspense>
   );
 }
 

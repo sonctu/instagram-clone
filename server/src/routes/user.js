@@ -17,4 +17,18 @@ router.get("/:id", middlewareController.verifyToken, userController.getUser);
 //Update current user
 router.put("/", middlewareController.verifyToken, userController.updateUser);
 
+// Follow user
+router.put(
+  "/:id/follow",
+  middlewareController.verifyToken,
+  userController.followUser
+);
+
+// Unfollow user
+router.put(
+  "/:id/unfollow",
+  middlewareController.verifyToken,
+  userController.unfollowUser
+);
+
 export default router;

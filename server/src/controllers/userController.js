@@ -73,6 +73,74 @@ const userController = {
       return res.status(500).json({ msg: error.message });
     }
   },
+  followUser: async (req, res) => {
+    try {
+      const currentUserId = req.user.id;
+      const userId = req.params.id;
+
+      const user = await User.findById(currentUserId);
+
+      if (user.followings.includes(userId))
+        return res.status(500).json({ msg: "You followed this user" });
+
+      const updateUser = await User.findByIdAndUpdate(
+        currentUserId,
+        {
+          $push: { followings: userId },
+        },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: { followers: currentUserId },
+        },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        msg: "Follow user",
+      });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+  unfollowUser: async (req, res) => {
+    try {
+      const currentUserId = req.user.id;
+      const userId = req.params.id;
+
+      const user = await User.findById(currentUserId);
+
+      if (!user.followings.includes(userId))
+        return res.status(500).json({
+          msg: "You haven't followed this user",
+        });
+
+      const updateUser = await User.findByIdAndUpdate(
+        currentUserId,
+        {
+          $pull: { followings: userId },
+        },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { followers: currentUserId },
+        },
+        { new: true }
+      );
+
+      return res.status(200).json({
+        msg: "Unfollow user",
+      });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
 };
 
 export default userController;
